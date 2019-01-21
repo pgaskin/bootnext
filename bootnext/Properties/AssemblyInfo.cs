@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("bootnext")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Patrick Gaskin")]
 [assembly: AssemblyProduct("bootnext")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright © 2019 Patrick Gaskin")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
