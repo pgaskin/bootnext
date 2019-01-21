@@ -89,7 +89,7 @@ namespace efi {
                 Id = optionId,
                 Description = GetDescription(optionId),
                 IsCurrent = currentEntryId == optionId,
-                IsBootNext = hasBootNext && nextEntryId == optionId
+                IsBootNext = hasBootNext ? nextEntryId == optionId : optionId == BitConverter.ToUInt16(buffer, 0), // Is BootNext or if none, is default
             }).ToArray();
         }
 
