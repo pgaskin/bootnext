@@ -54,6 +54,8 @@ namespace efi {
         }
     }
 
+    class NoBootNextException : Exception {}
+
     class EFIEnvironment {
         private const string EFI_GLOBAL_VARIABLE = "{8BE4DF61-93CA-11D2-AA0D-00E098032B8C}";
         private const string EFI_TEST_VARIABLE = "{00000000-0000-0000-0000-000000000000}";
@@ -77,12 +79,17 @@ namespace efi {
             var length = (int)ReadVariable(EFI_BOOT_ORDER, out var buffer);
             List<BootEntry> entries = new List<BootEntry>();
             ushort currentEntryId = GetBootCurrent();
-            ushort nextEntryId = GetBootNext();
+            bool hasBootNext = false;
+            ushort nextEntryId = 0;
+            try {
+                nextEntryId = GetBootNext();
+                hasBootNext = true;
+            } catch (NoBootNextException) {}
             return Enumerable.Range(0, length / 2).Select(x => BitConverter.ToUInt16(buffer, x * 2)).Select(optionId => new BootEntry() {
                 Id = optionId,
                 Description = GetDescription(optionId),
                 IsCurrent = currentEntryId == optionId,
-                IsBootNext = nextEntryId == optionId
+                IsBootNext = hasBootNext && nextEntryId == optionId
             }).ToArray();
         }
 
@@ -102,6 +109,7 @@ namespace efi {
             if (length == 0) {
                 var err = Marshal.GetLastWin32Error();
                 if (err != 203) throw new Exception("Error" + err);
+                throw new NoBootNextException();
             }
             return BitConverter.ToUInt16(buffer, 0);
         }

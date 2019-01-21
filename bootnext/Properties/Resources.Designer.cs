@@ -63,9 +63,29 @@ namespace bootnext.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon AppIcon {
+        internal static System.Drawing.Icon AppIconBlack {
             get {
-                object obj = ResourceManager.GetObject("AppIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("AppIconBlack", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon AppIconColor {
+            get {
+                object obj = ResourceManager.GetObject("AppIconColor", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon AppIconWhite {
+            get {
+                object obj = ResourceManager.GetObject("AppIconWhite", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

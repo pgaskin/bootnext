@@ -33,7 +33,7 @@ namespace bootnext {
             }
 
             trayIcon = new NotifyIcon() {
-                Icon = Properties.Resources.AppIcon,
+                Icon = Properties.Resources.AppIconWhite,
                 Visible = true,
                 ContextMenu = new ContextMenu(efi.EFIEnvironment.GetEntries().Select(entry => new MenuItem(entry.Description + (entry.IsCurrent ? " (current)" : ""), (sender, e) => {
                     try {
