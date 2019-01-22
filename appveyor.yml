@@ -1,0 +1,18 @@
+image: Visual Studio 2017
+
+version: 1.0.{build}
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+
+configuration: Release
+platform: x64
+build:
+  verbosity: minimal
+
+artifacts:
+- path: bootnext\bin\x64\Release\bootnext.exe
+  name: bootnext.exe

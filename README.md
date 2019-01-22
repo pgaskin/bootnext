@@ -1,5 +1,5 @@
 # bootnext
-Windows tray icon to set EFI BootNext.
+Windows tray icon to set EFI BootNext. Binaries can be downloaded [here](https://ci.appveyor.com/project/geek1011/bootnext/build/artifacts).
 
 ![](screenshot.png)
 
