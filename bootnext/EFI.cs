@@ -54,7 +54,7 @@ namespace efi {
         }
     }
 
-    class NoBootNextException : Exception {}
+    class NoBootNextException : Exception { }
 
     class EFIEnvironment {
         private const string EFI_GLOBAL_VARIABLE = "{8BE4DF61-93CA-11D2-AA0D-00E098032B8C}";
@@ -84,7 +84,7 @@ namespace efi {
             try {
                 nextEntryId = GetBootNext();
                 hasBootNext = true;
-            } catch (NoBootNextException) {}
+            } catch (NoBootNextException) { }
             return Enumerable.Range(0, length / 2).Select(x => BitConverter.ToUInt16(buffer, x * 2)).Select(optionId => new BootEntry() {
                 Id = optionId,
                 Description = GetDescription(optionId),
