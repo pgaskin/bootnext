@@ -77,7 +77,7 @@ namespace efi {
 
         public static BootEntry[] GetEntries() {
             var length = (int)ReadVariable(EFI_BOOT_ORDER, out var buffer);
-            List<BootEntry> entries = new List<BootEntry>();
+            var entries = new List<BootEntry>();
             ushort currentEntryId = GetBootCurrent();
             bool hasBootNext = false;
             ushort nextEntryId = 0;
@@ -108,8 +108,7 @@ namespace efi {
             uint length = ReadVariable(EFI_BOOT_NEXT, out var buffer);
             if (length == 0) {
                 var err = Marshal.GetLastWin32Error();
-                if (err != 203) throw new Exception("Error" + err);
-                throw new NoBootNextException();
+                throw err == 203 ? new NoBootNextException() : new Exception("Error" + err);
             }
             return BitConverter.ToUInt16(buffer, 0);
         }
@@ -150,14 +149,10 @@ namespace efi {
         internal const int TOKEN_ADJUST_PRIVILEGES = 0x00000020;
 
         public static void ObtainPrivileges(string privilege) {
-            IntPtr hToken = IntPtr.Zero;
+            var hToken = IntPtr.Zero;
             if (!NativeMethods.OpenProcessToken(NativeMethods.GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, ref hToken)) throw new InvalidOperationException("OpenProcessToken failed!");
 
-            TokenPrivelege tp;
-            tp.Count = 1;
-            tp.Luid = 0;
-            tp.Attr = SE_PRIVILEGE_ENABLED;
-
+            var tp = new TokenPrivelege { Count = 1, Luid = 0, Attr = SE_PRIVILEGE_ENABLED };
             if (!NativeMethods.LookupPrivilegeValue(null, privilege, ref tp.Luid)) throw new InvalidOperationException("LookupPrivilegeValue failed!");
             if (!NativeMethods.AdjustTokenPrivileges(hToken, false, ref tp, 0, IntPtr.Zero, IntPtr.Zero)) throw new InvalidOperationException("AdjustTokenPrivileges failed!");
         }

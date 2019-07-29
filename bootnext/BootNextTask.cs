@@ -15,7 +15,7 @@ namespace bootnext {
         public void Install(bool run = true) {
             Uninstall();
 
-            using (TaskDefinition task = svc.NewTask()) {
+            using (var task = svc.NewTask()) {
                 task.RegistrationInfo.Description = "Starts the bootnext tray icon on login";
                 task.RegistrationInfo.Version = Assembly.GetExecutingAssembly().GetName().Version;
 

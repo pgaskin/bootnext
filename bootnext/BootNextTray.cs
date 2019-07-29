@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace bootnext {
     class BootNextTray : ApplicationContext {
-        private NotifyIcon trayIcon;
+        private readonly NotifyIcon trayIcon;
 
         public BootNextTray() {
             trayIcon = new NotifyIcon() {
