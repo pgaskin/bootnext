@@ -1,14 +1,89 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Microsoft.Win32.TaskScheduler;
 
 namespace bootnext {
     static class Program {
+        [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+        static extern bool FreeConsole();
+
         [STAThread]
-        static void Main() {
+        static int Main(string[] args) {
+            return args.Length > 0 ? MainConsole(args) : MainUI();
+        }
+
+        static int MainUI() {
+            FreeConsole();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new BootNextTray());
+            return 0;
+        }
+
+        static int MainConsole(string[] args) {
+            try {
+                switch ((args[0] ?? "").ToUpper()) {
+                    case "/INSTALL":
+                        Console.WriteLine("Installing task");
+                        new BootNextTask().Install();
+                        return 0;
+                    case "/UNINSTALL":
+                        Console.WriteLine("Removing task");
+                        new BootNextTask().Uninstall();
+                        return 0;
+                    default:
+                        Console.WriteLine("bootnext [/? | /INSTALL | /UNINSTALL]");
+                        return 1;
+                }
+            } catch (Exception ex) {
+                Console.WriteLine(ex.ToString());
+                return 1;
+            }
+        }
+    }
+
+    class BootNextTask {
+        private TaskService svc = new TaskService();
+
+        public void Uninstall() {
+            using (var task = svc.GetTask(@"\bootnext"))
+                task?.Stop();
+            svc.RootFolder.DeleteTask("bootnext", false);
+        }
+
+        public void Install(bool run = true) {
+            Uninstall();
+
+            using (TaskDefinition task = svc.NewTask()) {
+                task.RegistrationInfo.Description = "Starts the bootnext tray icon on login";
+                task.RegistrationInfo.Version = Assembly.GetExecutingAssembly().GetName().Version;
+
+                task.Principal.GroupId = "S-1-5-32-544"; // Administrators
+                task.Principal.RunLevel = TaskRunLevel.Highest;
+                task.Triggers.Add(new LogonTrigger());
+                task.Actions.Add(new ExecAction(Assembly.GetEntryAssembly().Location));
+
+                task.Settings.Hidden = false;
+                task.Settings.AllowDemandStart = true;
+                task.Settings.ExecutionTimeLimit = TimeSpan.Zero;
+                task.Settings.MultipleInstances = TaskInstancesPolicy.StopExisting;
+
+                task.Settings.DisallowStartIfOnBatteries = false;
+                task.Settings.StopIfGoingOnBatteries = false;
+                task.Settings.AllowHardTerminate = false;
+                task.Settings.StartWhenAvailable = false;
+                task.Settings.RunOnlyIfNetworkAvailable = false;
+                task.Settings.WakeToRun = false;
+
+                svc.RootFolder.RegisterTaskDefinition(@"bootnext", task);
+            }
+
+            if (run)
+                using (var task = svc.GetTask(@"\bootnext"))
+                    task?.Run();
         }
     }
 
