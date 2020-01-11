@@ -88,7 +88,6 @@
     </Compile>
     <None Include=".editorconfig" />
     <None Include="app.manifest" />
-    <None Include="ILMerge.props" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
