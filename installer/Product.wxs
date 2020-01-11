@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <!-- Version is bound to the bootnext exe version to make AppVeyor builds easier to manage -->
+  <Product Id="*" Name="bootnext" Language="1033" Version="!(bind.FileVersion.bootnextEXE)" Manufacturer="Patrick Gaskin" UpgradeCode="8cb1d87a-a104-4455-9ee6-4c1ce619c374">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <!-- AllowDowngrades is needed to prevent duplicate uninstall entries when installing new versions and to allow using locally built version over AppVeyor build -->
+    <MajorUpgrade AllowDowngrades="yes" Schedule="afterInstallValidate" />
+    <MediaTemplate EmbedCab="yes"/>
+
+    <!-- Uninstall entry actions (remove modify, keep repair) -->
+    <Property Id="ARPNOMODIFY" Value="yes" Secure="yes" />
+
+    <!-- Uninstall entry icon -->
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+    <Icon Id="icon.ico" SourceFile="$(var.bootnext.ProjectDir)\Resources\AppIconColor.ico"/>
+
+    <!-- Product files -->
+    <Feature Id="ProductFeature" Title="bootnext" Level="1">
+      <Component Id="ProductComponent" Directory="INSTALLFOLDER">
+        <File Id="bootnextEXE" Source="$(var.bootnext.TargetPath)" />
+      </Component>
+    </Feature>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLFOLDER" Name="bootnext" />
+      </Directory>
+    </Directory>
+
+    <!-- Startup task -->
+    <InstallExecuteSequence>
+      <Custom Action="InstallStartupTask" After="InstallFiles">
+        <!-- on install/upgrade/repair, will add task and start -->
+        REMOVE = ""
+      </Custom>
+      <Custom Action="UninstallStartupTask" Before="RemoveFiles">
+        <!-- on uninstall/reinstall/upgrade, will kill and remove task -->
+        REMOVE = "ALL"
+      </Custom>
+    </InstallExecuteSequence>
+
+    <CustomAction Id="InstallStartupTask"   Execute="commit" Impersonate="no" FileKey="bootnextEXE" ExeCommand="/install"   Return="check" />
+    <CustomAction Id="UninstallStartupTask" Execute="commit" Impersonate="no" FileKey="bootnextEXE" ExeCommand="/uninstall" Return="ignore" />
+  </Product>
+</Wix>

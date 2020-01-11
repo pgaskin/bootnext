@@ -20,3 +20,5 @@ build:
 artifacts:
 - path: bootnext\bin\x64\Release\bootnext.exe
   name: bootnext.exe
+- path: installer\bin\x64\Release\bootnext.msi
+  name: bootnext.msi

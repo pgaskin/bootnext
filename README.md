@@ -1,5 +1,5 @@
 # bootnext
-Windows tray icon to set the EFI BootNext option. Binaries can be downloaded [here](https://ci.appveyor.com/project/geek1011/bootnext/build/artifacts).
+Windows tray icon to set the EFI BootNext option. Binaries and an optional MSI installer can be downloaded [here](https://ci.appveyor.com/project/geek1011/bootnext/build/artifacts).
 
 ![](screenshot.png)
 
@@ -15,3 +15,5 @@ Windows tray icon to set the EFI BootNext option. Binaries can be downloaded [he
 9. Under `Settings`, untick `Stop the task if it runs longer than:`.
 
 Alternatively, you can create the task automatically by running `bootnext /install` from a command prompt as an administrator. To remove it, run `bootnext /uninstall`.
+
+The MSI installer will create the scheduled task automatically.
