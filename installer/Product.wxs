@@ -30,11 +30,11 @@
 
     <!-- Startup task -->
     <InstallExecuteSequence>
-      <Custom Action="InstallStartupTask" After="InstallFiles">
+      <Custom Action="InstallStartupTask" Before="InstallFinalize">
         <!-- on install/upgrade/repair, will add task and start -->
         REMOVE = ""
       </Custom>
-      <Custom Action="UninstallStartupTask" Before="RemoveFiles">
+      <Custom Action="UninstallStartupTask" After="InstallInitialize">
         <!-- on uninstall/reinstall/upgrade, will kill and remove task -->
         REMOVE = "ALL"
       </Custom>
