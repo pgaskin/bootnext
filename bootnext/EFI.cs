@@ -15,17 +15,7 @@ namespace efi {
         FlagPlanned = 0x80000000
     }
 
-    enum FirmwareType : uint {
-        FirmwareTypeUnknown = 0,
-        FirmwareTypeBios = 1,
-        FirmwareTypeUefi = 2,
-        FirmwareTypeMax = 3
-    }
-
     class NativeMethods {
-        [DllImport("kernel32.dll")]
-        private static extern bool GetFirmwareType(ref FirmwareType FirmwareType);
-
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern uint GetFirmwareEnvironmentVariable([MarshalAs(UnmanagedType.LPWStr)] string lpName, [MarshalAs(UnmanagedType.LPWStr)] string lpGuid, byte[] pBuffer, uint nSize);
 
@@ -47,11 +37,6 @@ namespace efi {
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool ExitWindowsEx(ExitWindows uFlags, ShutdownReason dwReason);
-
-        public static FirmwareType GetFirmwareType() {
-            FirmwareType type = FirmwareType.FirmwareTypeUnknown;
-            return GetFirmwareType(ref type) ? type : FirmwareType.FirmwareTypeUnknown;
-        }
     }
 
     class NoBootNextException : Exception { }
@@ -65,7 +50,6 @@ namespace efi {
         private const string LOAD_OPTION_FORMAT = "Boot{0:X4}";
 
         public static bool IsSupported() {
-            if (NativeMethods.GetFirmwareType() != FirmwareType.FirmwareTypeUefi) return false;
             if (NativeMethods.GetFirmwareEnvironmentVariable(string.Empty, EFI_TEST_VARIABLE, null, 0) == 0) return Marshal.GetLastWin32Error() == 998;
             return true;
         }
