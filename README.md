@@ -1,5 +1,5 @@
 # bootnext
-Windows tray icon to set the EFI BootNext option. Binaries and an optional MSI installer can be downloaded [here](https://ci.appveyor.com/project/geek1011/bootnext/build/artifacts).
+Windows tray icon to set the EFI BootNext option. Binaries and an optional MSI installer can be downloaded [here](https://ci.appveyor.com/project/pgaskin/bootnext/build/artifacts).
 
 ![](screenshot.png)
 
